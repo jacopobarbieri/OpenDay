@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="refresh" content="5">
+    <title>Monitoraggio Open Day</title>
+    <style>
+        :root {
+            --bg-color: #f0f4f8;
+            --card-bg: #ffffff;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --primary: #2563eb;
+            --temp-color: #ef4444;
+            --hum-color: #0ea5e9;
+            --press-color: #10b981;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            padding: 2rem 1rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 2.5rem;
+        }
+
+        h1 {
+            font-size: 2.2rem;
+            color: var(--text-main);
+            margin-bottom: 0.5rem;
+            letter-spacing: -0.5px;
+        }
+
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background-color: #dcfce7;
+            color: #166534;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .dot {
+            width: 10px;
+            height: 10px;
+            background-color: #22c55e;
+            border-radius: 50%;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(0.95); opacity: 1; }
+            50% { transform: scale(1.2); opacity: 0.5; }
+            100% { transform: scale(0.95); opacity: 1; }
+        }
+
+        .dashboard {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 2rem;
+            width: 100%;
+            max-width: 900px;
+        }
+
+        .room-card {
+            background-color: var(--card-bg);
+            border-radius: 16px;
+            padding: 1.8rem;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+            border-top: 5px solid var(--primary);
+        }
+
+        .room-title {
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.8rem;
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .sensor-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .sensor-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #f8fafc;
+            padding: 1rem 1.2rem;
+            border-radius: 12px;
+            border-left: 4px solid #cbd5e1;
+        }
+
+        .sensor-item.temp { border-left-color: var(--temp-color); }
+        .sensor-item.hum { border-left-color: var(--hum-color); }
+        .sensor-item.press { border-left-color: var(--press-color); }
+
+        .sensor-label {
+            font-size: 1.05rem;
+            color: var(--text-muted);
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .sensor-value {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--text-main);
+        }
+
+        .unit {
+            font-size: 1rem;
+            font-weight: 500;
+            color: var(--text-muted);
+            margin-left: 2px;
+        }
+
+        footer {
+            margin-top: auto;
+            padding-top: 2rem;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Monitoraggio Ambientale</h1>
+        <div class="status-badge">
+            <span class="dot"></span>
+            Aggiornamento automatico attivo (5s)
+        </div>
+    </header>
+
+    <main class="dashboard">
+        <!-- Scheda Laboratorio -->
+        <section class="room-card">
+            <h2 class="room-title">🔬 Laboratorio</h2>
+            <div class="sensor-list">
+                <div class="sensor-item temp">
+                    <span class="sensor-label">🌡️ Temperatura</span>
+                    <span class="sensor-value">{{ dati['Lab/T'] }}<span class="unit">°C</span></span>
+                </div>
+                <div class="sensor-item hum">
+                    <span class="sensor-label">💧 Umidità</span>
+                    <span class="sensor-value">{{ dati['Lab/H'] }}<span class="unit">%</span></span>
+                </div>
+                <div class="sensor-item press">
+                    <span class="sensor-label">⏱️ Pressione</span>
+                    <span class="sensor-value">{{ dati['Lab/P'] }}<span class="unit">hPa</span></span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Scheda Atrio -->
+        <section class="room-card">
+            <h2 class="room-title">🏫 Atrio</h2>
+            <div class="sensor-list">
+                <div class="sensor-item temp">
+                    <span class="sensor-label">🌡️ Temperatura</span>
+                    <span class="sensor-value">{{ dati['Atrio/T'] }}<span class="unit">°C</span></span>
+                </div>
+                <div class="sensor-item hum">
+                    <span class="sensor-label">💧 Umidità</span>
+                    <span class="sensor-value">{{ dati['Atrio/H'] }}<span class="unit">%</span></span>
+                </div>
+                <div class="sensor-item press">
+                    <span class="sensor-label">⏱️ Pressione</span>
+                    <span class="sensor-value">{{ dati['Atrio/P'] }}<span class="unit">hPa</span></span>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        Progetto Open Day • Sistema di Rilevamento Dati
+    </footer>
+
+</body>
+</html>
